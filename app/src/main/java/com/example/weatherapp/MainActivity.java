@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     WeatherModel weather = response.body();
                     String location = weather.getLocation().getName() + ", " + weather.getLocation();
-                    //Just to check whether it is fetching data from internet or not
+
                     btn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
