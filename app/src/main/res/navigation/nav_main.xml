@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/mainActivity">
+
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.example.weatherapp.MainActivity"
+        android:label="activity_main"
+        tools:layout="@layout/activity_main" />
+    <fragment
+        android:id="@+id/allDetails"
+        android:name="com.example.weatherapp.AllDetails"
+        android:label="fragment_all_details"
+        tools:layout="@layout/fragment_all_details" />
+    <fragment
+        android:id="@+id/addLocation2"
+        android:name="com.example.weatherapp.AddLocation"
+        android:label="fragment_add_location"
+        tools:layout="@layout/fragment_add_location" />
+</navigation>

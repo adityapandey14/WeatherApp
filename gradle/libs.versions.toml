@@ -7,9 +7,11 @@ appcompat = "1.7.0"
 material = "1.12.0"
 activity = "1.8.0"
 constraintlayout = "2.2.0"
-kotlin = "1.9.24"
-coreKtx = "1.15.0"
+kotlin = "1.8.10"
+coreKtx = "1.9.0"
 mediarouter = "1.7.0"
+navigationFragmentKtx = "2.8.7"
+navigationUiKtx = "2.8.7"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -21,6 +23,8 @@ activity = { group = "androidx.activity", name = "activity", version.ref = "acti
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 mediarouter = { group = "androidx.mediarouter", name = "mediarouter", version.ref = "mediarouter" }
+navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
+navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

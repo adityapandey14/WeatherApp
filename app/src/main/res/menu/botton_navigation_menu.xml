@@ -2,10 +2,7 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Location"
-        android:id="@+id/location"
-        android:icon="@drawable/hover"
-        />
+
     <item android:title="AddLocation"
         android:id="@+id/addLocation"
         android:icon="@drawable/button"
@@ -14,4 +11,5 @@
         android:id="@+id/menu"
         android:icon="@drawable/list"
         />
+
 </menu>

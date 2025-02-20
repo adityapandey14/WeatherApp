@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.weatherapp"
-        minSdk = 24
+        minSdk = 27
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -47,10 +47,13 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.core.ktx)
     implementation(libs.mediarouter)
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
+    implementation ("com.google.android.gms:play-services-location:17.0.0")
 }
