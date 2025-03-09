@@ -3,6 +3,8 @@ package com.example.weatherapp;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -28,11 +30,14 @@ import com.example.weatherapp.ViewModel.WeatherModel;
 import com.example.weatherapp.databinding.ActivityMainBinding;
 import com.example.weatherapp.retrofit.WeatherApiService;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationListener;
+import android.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private BottomSheetBehavior<CoordinatorLayout> bottomSheetBehavior;
     FusedLocationProviderClient mFusedLocationClient;
     LocationManager locationManager;
+    String currentLocation ;
 
 
 
@@ -63,15 +69,16 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        doApiCall();
+//        doApiCall();
         navigationCall();
         checkManifestPermission();
+        getLocation();
 
-        FrameLayout bottomSheet = findViewById(R.id.sheet);
-        BottomSheetBehavior<FrameLayout> bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        bottomSheetBehavior.setPeekHeight(400);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        bottomSheetBehavior.setDraggable(true);
+//        FrameLayout bottomSheet = findViewById(R.id.sheet);
+//        BottomSheetBehavior<FrameLayout> bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+//        bottomSheetBehavior.setPeekHeight(400);
+//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+//        bottomSheetBehavior.setDraggable(true);
 
     }
 
@@ -99,15 +106,17 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     }
 
     private void uiDesignChanges() {
-        binding.city.setText(weather.getLocation().getName());
-         double temp = weather.getCurrent().getTempC();
-        binding.temperature.setText(String.valueOf(weather.getCurrent().getTempC()));
-        binding.surroundingView.setText(weather.getCurrent().getCondition().getText());
-        binding.feelsLike.setText("Feels like " + weather.getCurrent().getFeelslikeC());
+        if (weather != null && weather.getLocation() != null) {
+            binding.city.setText(weather.getLocation().getName());
+
+            binding.temperature.setText(String.valueOf(weather.getCurrent().getTempC()));
+            binding.surroundingView.setText(weather.getCurrent().getCondition().getText());
+            binding.feelsLike.setText("Feels like " + weather.getCurrent().getFeelslikeC());
+        }
     }
 
 
-    private void doApiCall(){
+    private void doApiCall(String city){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -117,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         Call<WeatherModel> call = apiService.getWeatherData(
                 "d562a63d60c54ac293b72147251902",
-                "Mumbai",
+                city,
                 "yes"
         );
 
@@ -161,21 +170,45 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         }
     }
 
-    @
+
     @SuppressLint("MissingPermission")
     private void getLocation() {
+        Log.d("getLocation", "this method is callec0");
         try {
             locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, (android.location.LocationListener) MainActivity.this);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5,  MainActivity.this);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
     }
 
+    private void getAddressFromLocation(double latitude, double longitude) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (addresses != null && !addresses.isEmpty()) {
+                Address address = addresses.get(0);
+                String city = address.getLocality(); // City
+                String state = address.getAdminArea(); // State
+                String country = address.getCountryName(); // Country
+                doApiCall(city);
+
+                Log.d("getAddressFromLocation", "City: " + city);
+                Log.d("getAddressFromLocation","State: " + state);
+                Log.d("getAddressFromLocation","Country: " + country);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void onLocationChanged(Location location) {
-
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        Log.d("onLocationChanged","Location: " + latitude + ", " + longitude);
+        getAddressFromLocation(latitude,longitude);
     }
 }

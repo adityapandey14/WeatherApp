@@ -6,7 +6,7 @@
     android:background="@mipmap/ic_launcher_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp"
+
 
     tools:context=".MainActivity">
 
@@ -139,15 +139,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/botton_navigation_menu"
         />
-    <FrameLayout
-        android:id="@+id/sheet"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        android:background="@drawable/bottomsheet_rounded"
-        >
 
 
 
-    </FrameLayout>
+
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
