@@ -1,5 +1,10 @@
 package com.example.weatherapp;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -10,6 +15,8 @@ import android.widget.FrameLayout;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -20,6 +27,9 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.weatherapp.ViewModel.WeatherModel;
 import com.example.weatherapp.databinding.ActivityMainBinding;
 import com.example.weatherapp.retrofit.WeatherApiService;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.io.Serializable;
@@ -30,7 +40,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LocationListener {
 
     private static final String TAG = "MainActivity";
     ActivityMainBinding binding;
@@ -41,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     Button btn;
     Bundle bundle = new Bundle();
     private BottomSheetBehavior<CoordinatorLayout> bottomSheetBehavior;
+    FusedLocationProviderClient mFusedLocationClient;
+    LocationManager locationManager;
 
 
 
@@ -50,8 +62,10 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         doApiCall();
         navigationCall();
+        checkManifestPermission();
 
         FrameLayout bottomSheet = findViewById(R.id.sheet);
         BottomSheetBehavior<FrameLayout> bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -135,4 +149,33 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    private void checkManifestPermission(){
+        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED){
+
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION , Manifest.permission.ACCESS_COARSE_LOCATION
+            }, 100);
+        }
+    }
+
+    @
+    @SuppressLint("MissingPermission")
+    private void getLocation() {
+        try {
+            locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, (android.location.LocationListener) MainActivity.this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
 }
